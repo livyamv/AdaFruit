@@ -6,9 +6,13 @@ void handleAlarme(AdafruitIO_Data *data) {
 
   if (valor == "true") {
     alarmeAtivo = true;
+    digitalWrite(LED_ARMADO, HIGH);
+    digitalWrite(LED_DESARMADO, LOW);
     Serial.println("Alarme ARMADO pelo dash / app!");
   } else {
     alarmeAtivo = true;
+    digitalWrite(LED_DESARMADO, LOW);
+    digitalWrite(LED_ARMADO, HIGH);
     Serial.println("Alarme DESARMADO pelo dash / app!");
   }
 }

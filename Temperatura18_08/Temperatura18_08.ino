@@ -3,12 +3,12 @@
 // #include "NewPing.h"
 
 // //configurações da rede Wifi
-// #define WIFI_SSID "malu"
-// #define WIFI_PASS "13131313"
+// #define WIFI_SSID "..."
+// #define WIFI_PASS "..."
 
 // //Autenticação Adafruit IO
-// #define IO_USERNAME "livmaria"
-// #define IO_KEY ""
+// #define IO_USERNAME "..."
+// #define IO_KEY "..."
 
 // AdafruitIO_WiFi io(IO_USERNAME, IO_KEY, WIFI_SSID, WIFI_PASS);
 
@@ -19,6 +19,9 @@
 #define BOTAO_FISICO 26
 #define TRIG_PIN 12
 #define ECHO_PIN 14
+#define LED_ARMADO 33
+#define LED_DESARMADO 25
+
 
 //Configuração do ultrassônico
 #define MAX_DISTANCE 100
@@ -39,6 +42,8 @@ const float Vcc = 3.3;
 
 //Definição dos Feeds
 AdafruitIO_Feed *botaoAlarme = io.feed("botaoalarme");
+AdafruitIO_Feed *distanciaultrassom = io.feed("distanciaultrassom");
+
 
 //Definição Variáveis de controle
 bool alarmeAtivo = false;
@@ -52,6 +57,8 @@ void setup() {
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(LED_ALARME, OUTPUT);
   pinMode(BOTAO_FISICO, INPUT);
+  pinMode(LED_ARMADO, OUTPUT);
+  pinMode(LED_DESARMADO, OUTPUT);
 
 
   delay(1000);
@@ -104,8 +111,13 @@ void loop() {
   Serial.println(distancia);
   Serial.println("cm");
 
-    //Ativação pu desativaçao do alarme
-    if (alarmeAtivo && distancia > 0 && distancia < LIMITE_DISTANCIA) {
+  if (distancia != 0) {
+    //só envia distancias válidas
+    distanciaultrassom -> save(distancia);
+  }
+
+  //Ativação pu desativaçao do alarme
+  if (alarmeAtivo && distancia > 0 && distancia < LIMITE_DISTANCIA) {
     ativarAlarme();
   }
 
@@ -114,7 +126,7 @@ void loop() {
   }
 
   // //publicacao(); // Chamada da função publish
-  // delay(500);
+  delay(3000);
   // testeBuzzer();
   // testeLed();
   // testeBotao(BOTAO_FISICO);
